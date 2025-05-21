@@ -22,6 +22,11 @@ public class UserController {
         return userMapper.selectAll();
     }
 
+    @GetMapping("getGeldUser")
+    public List<User> getGeldUser() {
+        return userMapper.selectUserByStar();
+    }
+
 
     @PostMapping("/Register")
     public String register(@RequestBody User userFromFront) {

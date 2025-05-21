@@ -12,4 +12,19 @@ public interface GoodMapper {
     @Select("SELECT * FROM Good")
     List<Good> selectAll();
 
+    @Select("SELECT g.* " +
+            "FROM Good g " +
+            "JOIN User u ON g.seller_id = u.user_id " +
+            "ORDER BY u.star DESC")
+    List<Good> selectOrderBySellerStar();
+
+    @Select("SELECT * " +
+            "FROM Good " +
+            "ORDER BY last_update_time DESC;")
+    List<Good> selectOrderNewBook();
+
+    @Select("SELECT * FROM Good WHERE good_id = #{id}")
+    Good selectById(Integer id);
+
+
 }
