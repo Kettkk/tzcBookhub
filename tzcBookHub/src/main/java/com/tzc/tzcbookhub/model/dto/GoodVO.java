@@ -1,16 +1,14 @@
-package com.tzc.tzcbookhub.model;
+package com.tzc.tzcbookhub.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class Good {
+public class GoodVO {
     private int goodID;
+    private String sellerName;
     private String goodName;
-    private int sellerID;
     private String goodInfo;
     private double goodValue;
     private String goodImg;
