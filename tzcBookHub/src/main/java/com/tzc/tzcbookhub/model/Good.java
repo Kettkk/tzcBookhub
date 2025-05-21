@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Good {
+<<<<<<< HEAD
     public Integer getGoodID() {
         return goodID;
     }
@@ -24,7 +25,7 @@ public class Good {
         this.goodName = goodName;
     }
 
-    public Integer getSellerID() {
+    public int getSellerID() {
         return sellerID;
     }
 
@@ -72,7 +73,7 @@ public class Good {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-    private Integer goodID;
+    private int goodID;
     private String goodName;
     private Integer sellerID;
     private String goodInfo;
@@ -80,5 +81,4 @@ public class Good {
     private String goodImg;
     private LocalDateTime createTime;
     private LocalDateTime lastUpdateTime;
-
 }
