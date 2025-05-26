@@ -26,5 +26,8 @@ public interface GoodMapper {
     @Select("SELECT * FROM Good WHERE good_id = #{id}")
     Good selectById(Integer id);
 
+    @Select("SELECT * FROM Good WHERE seller_id = #{id}")
+    List<Good> selectByUserId(Integer id);
+
 
 }

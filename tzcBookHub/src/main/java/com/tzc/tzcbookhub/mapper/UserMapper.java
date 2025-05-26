@@ -16,6 +16,9 @@ public interface UserMapper {
     @Select("SELECT * FROM User ORDER BY star DESC;")
     List<User> selectUserByStar();
 
+    @Select("SELECT * FROM User WHERE user_id = #{id}")
+    User selectById(Integer id);
+
     @Select("SELECT MAX(user_id) FROM User")
     Integer getMaxUserId();
 

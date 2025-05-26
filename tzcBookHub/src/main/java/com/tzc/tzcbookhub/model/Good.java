@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class Good {
-<<<<<<< HEAD
     public Integer getGoodID() {
         return goodID;
     }

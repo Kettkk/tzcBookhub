@@ -17,24 +17,25 @@ public class UserController {
     @Resource
     private UserMapper userMapper;
 
-    @GetMapping("getAllUser")
-    public List<User> getAllUser() {
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
         return userMapper.selectAll();
     }
 
-    @GetMapping("getGeldUser")
-    public List<User> getGeldUser() {
+    @GetMapping("/getGeldUser")
+    public List<User> getStarredUsers() {
         return userMapper.selectUserByStar();
     }
 
+    @PostMapping("/userinfo")
+    public User getUserInfo(@RequestBody Integer userId) {
+        return userMapper.selectById(userId);
+    }
 
-    @PostMapping("/Register")
+    @PostMapping("/register")
     public String register(@RequestBody User userFromFront) {
-        List<User> existingUsers = userMapper.selectAll();
-        for (User u : existingUsers) {
-            if (u.getUsername().equals(userFromFront.getUsername())) {
-                return "500"; // 用户名重复
-            }
+        if (userMapper.findByUsername(userFromFront.getUsername()) != null) {
+            return "500"; // 用户名已存在
         }
 
         Integer maxUserId = userMapper.getMaxUserId();
@@ -49,24 +50,15 @@ public class UserController {
         userFromFront.setLastUpdateTime(now);
 
         int result = userMapper.insertUser(userFromFront);
-
         return result > 0 ? "200" : "500";
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest loginRequest) {
+    public Integer login(@RequestBody LoginRequest loginRequest) {
         User user = userMapper.findByUsername(loginRequest.getUsername());
-        if (user == null) {
-            return "500"; // 用户不存在
+        if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
+            return -1; // 登录失败返回 -1 或其他错误标识
         }
-        if (!user.getPassword().equals(loginRequest.getPassword())) {
-            return "500"; // 密码错误
-        }
-
-        // 登录成功，生成 JWT
-        String token = JwtUtil.generateToken(user.getUserID(), user.getUsername(), user.getPassword());
-        return token;
+        return user.getUserID(); // 登录成功返回 user_id
     }
-
-
 }
