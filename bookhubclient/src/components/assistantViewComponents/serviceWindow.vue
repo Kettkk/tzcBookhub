@@ -50,8 +50,6 @@ const go2BackPage = () =>{
 }
 
 
-
-
 </script>
 
 <style scoped>

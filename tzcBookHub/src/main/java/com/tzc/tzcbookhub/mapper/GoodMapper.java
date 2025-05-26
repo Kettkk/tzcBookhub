@@ -2,6 +2,7 @@ package com.tzc.tzcbookhub.mapper;
 
 import com.tzc.tzcbookhub.model.Good;
 import com.tzc.tzcbookhub.model.User;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -28,6 +29,15 @@ public interface GoodMapper {
 
     @Select("SELECT * FROM Good WHERE seller_id = #{id}")
     List<Good> selectByUserId(Integer id);
+
+    @Insert("INSERT INTO Good " +
+            "( good_id,seller_id, good_name, good_info, good_value, good_img )" +
+            "VALUES" +
+            "(#{goodID}, #{sellerID}, #{goodName}, #{goodInfo}, #{goodValue}, #{goodImg})")
+    int saveProduct(Good good);
+
+    @Select("SELECT id FROM Good ORDER BY id DESC LIMIT 1;")
+    int selectFinalId();
 
 
 }

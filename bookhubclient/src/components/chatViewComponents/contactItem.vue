@@ -1,9 +1,9 @@
 <template>
     <div id="contact" @mouseover="showButton" @mouseleave="hideButton" >
 
-        <el-avatar id="contact-avatar" size='large' :src="props.item.url" />
+        <el-avatar id="contact-avatar" size='large' :src="props.item.avatar" />
 
-        <div id="contact-name">{{ props.item.name }}</div>
+        <div id="contact-name">{{ props.item.username }}</div>
 
 
         <div v-show="isButtonVisible" style="margin-left:auto ;margin-right: 5px;">
@@ -17,8 +17,7 @@
 <script setup>
 import { CloseBold } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import axios from "axios";
-import {testURL} from "@/Tools/testTool.js";
+
 
 const props = defineProps({
     item: {
@@ -41,19 +40,7 @@ const hideButton = () => {
 }
 
 const delChat = () => {
-    axios.post('http://'+testURL+':5062/api/chat/contactListDel', {
-        "jwtStr": document.cookie.split('=')[1],
-        "otherID": props.otherID
-    })
-        .then(function (response) {
-            console.log(response.data);
-            setTimeout(() => {
-            location.reload();
-          }, 2000);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+
 }
 
 

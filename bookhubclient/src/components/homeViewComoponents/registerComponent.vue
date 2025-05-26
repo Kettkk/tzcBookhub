@@ -81,7 +81,7 @@ const submitRegisterForm = () => {
 };
 
 const test = (registerInfo) => {
-    axios.post('http://localhost:8000/api/Register', registerInfo,
+    axios.post('http://localhost:8000/api/register', registerInfo,
     {
       headers: {
         'Content-Type': 'application/json;charset=UTF-8'

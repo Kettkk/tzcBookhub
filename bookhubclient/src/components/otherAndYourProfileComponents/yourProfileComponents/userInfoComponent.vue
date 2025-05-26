@@ -26,17 +26,17 @@ onMounted(() => {
       'Content-Type': 'application/json'
     }
   })
-      .then(response => {
-        const data = response.data;
-        username.value = data.username;
-        star.value = data.star;
-        money.value = data.money;
-        squareUrl.value = data.avatar;
-        console.log(data);
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    .then(response => {
+      const data = response.data;
+      username.value = data.username;
+      star.value = data.star;
+      money.value = data.money;
+      squareUrl.value = data.avatar;
+      console.log(data);
+    })
+    .catch(error => {
+      console.error(error);
+    });
 });
 //#endregion
 
@@ -107,13 +107,18 @@ const submitGoodInfo = () => {
     formData.append("description", description.value)
 
     const tokenStr = document.cookie.split('=')[1]
-    axios.post('http://'+testURL+':5062/api/PublishBook', formData, {
+    axios.post('http://localhost:8000/api/PublishBook', formData, {
       headers: {
         Authorization: `Bearer ${tokenStr}`
       }
     })
       .then(function (response) {
         console.log(response);
+        ElMessage({
+          message: '发布成功',
+          type: 'success',
+          plain: true,
+        })
       })
       .catch(function (error) {
         console.log(error);
@@ -126,14 +131,10 @@ const submitGoodInfo = () => {
     description.value = ''
     faceList.value = []
     noUpload.value = false;
-    ElMessage({
-      message: '发布成功',
-      type: 'success',
-      plain: true,
-    })
+
     setTimeout(() => {
       location.reload();
-    }, 2000); 
+    }, 2000);
   }
 }
 //#endregion
@@ -141,7 +142,7 @@ const submitGoodInfo = () => {
 //#region 修改个人信息功能JS
 const editedName = ref('')
 const editedEmail = ref('')
-const editedFormData= new FormData()
+const editedFormData = new FormData()
 
 const checkAvatarFormat = (file) => {
   const fileFormat = file.name.split(".").pop().toLowerCase(); // 获取文件格式
@@ -150,7 +151,7 @@ const checkAvatarFormat = (file) => {
     avatarList.value = []; //删除格式不符合的文件
     return false; // 阻止文件上传
   }
-  editedFormData.append("img",file.raw)
+  editedFormData.append("img", file.raw)
   dontUpload.value = true//设置为true阻止继续上传
   return true; // 允许文件上传
 };
@@ -173,27 +174,26 @@ const dontUpload = ref(false)//不再上传
 
 //关闭编辑个人信息窗口，清空信息
 const closeEditInfoDialog = () => {
-  editedName.value=''
-  editedEmail.value=''
-  avatarList.value=[]
-  dontUpload.value=false
-  dialogFormVisible.value=false
+  editedName.value = ''
+  editedEmail.value = ''
+  avatarList.value = []
+  dontUpload.value = false
+  dialogFormVisible.value = false
 }
 //提交修改内容的方法
 const submitUserInfo = () => {
-  if(editedName.value =='' && editedEmail.value == '' && !editedFormData.has("img"))
-  {
+  if (editedName.value == '' && editedEmail.value == '' && !editedFormData.has("img")) {
     ElMessage({
-      message:'若要修改个人信息，请至少填写一项内容',
-      type:'error',
-      plain:true
+      message: '若要修改个人信息，请至少填写一项内容',
+      type: 'error',
+      plain: true
     })
-  }else{
-    editedFormData.append("editedName",editedName.value)
-    editedFormData.append("editedEmail",editedEmail.value)
-    
+  } else {
+    editedFormData.append("editedName", editedName.value)
+    editedFormData.append("editedEmail", editedEmail.value)
+
     const tokenStr = document.cookie.split('=')[1]
-    axios.post('http://'+testURL+':5062/api/EditPersonalInfo', editedFormData, {
+    axios.post('http://localhost:8000/api/updateUserInfo', editedFormData, {
       headers: {
         Authorization: `Bearer ${tokenStr}`
       }
@@ -205,11 +205,11 @@ const submitUserInfo = () => {
         console.log(error);
       });
 
-    dialogFormVisible.value=false
-    editedName.value=''
-    editedEmail.value=''
-    avatarList.value=[]
-    dontUpload.value=false
+    dialogFormVisible.value = false
+    editedName.value = ''
+    editedEmail.value = ''
+    avatarList.value = []
+    dontUpload.value = false
     ElMessage({
       message: '修改成功',
       type: 'success',
@@ -217,7 +217,7 @@ const submitUserInfo = () => {
     })
     setTimeout(() => {
       location.reload();
-    }, 2000); 
+    }, 2000);
   }
 }
 //#endregion
@@ -259,7 +259,7 @@ const submitUserInfo = () => {
           </div>
 
           <el-dialog v-model="isdialogVisible">
-            <img w-full :src="previewImageUrl" alt="Preview Image" class="preview-image"/>
+            <img w-full :src="previewImageUrl" alt="Preview Image" class="preview-image" />
           </el-dialog>
 
 

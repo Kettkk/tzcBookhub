@@ -3,8 +3,7 @@
 import {ref} from "vue";
 
 var items = ref([
-    'src/assets/homePoster/homePoster1.png',
-    'src/assets/homePoster/homePoster2.png',
+    'src/assets/homePoster/homePoster1.jpg',
     'src/assets/homePoster/homePoster3.png',
     'src/assets/homePoster/homePoster4.png'
 ])

@@ -28,24 +28,35 @@ console.log(purchaseBookID.value, purchasesellerID.value)
 const url = 'http://localhost:8000/api/getGoodById?id=' + purchaseBookID.value;
 
 axios.get(url)
-    .then(function (response) {
-      const goodData = response.data.good;
-      const sellerData = response.data.seller;
+  .then(function (response) {
+    const goodData = response.data.good;
+    const sellerData = response.data.seller;
 
-      information.bookName = goodData.goodName;
-      information.price = goodData.goodValue;
-      information.goodDescription = goodData.goodInfo;
-      information.bookImg = goodData.goodImg;
+    information.bookName = goodData.goodName;
+    information.price = goodData.goodValue;
+    information.goodDescription = goodData.goodInfo;
+    information.bookImg = goodData.goodImg;
 
-      information.sellerName = sellerData.username;
-      information.sellerAvatar = sellerData.avatar;
-      information.value = sellerData.star;
+    information.sellerName = sellerData.username;
+    information.sellerAvatar = sellerData.avatar;
+    information.value = sellerData.star;
 
-      console.log(response.data);
-    })
+    console.log(response.data);
+  })
 
 const go2ChatView = () => {
-  router.push('/chatRoom');
+  axios.post('http://localhost:8000/api/chat/save', {
+    receiverId: purchasesellerID.value
+  }, {
+    withCredentials: true 
+  })
+    .then(response => {
+      console.log(response);
+      router.push('/chatRoom');
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 
 const go2otherProfileView = () => {
@@ -64,20 +75,20 @@ const purchaseThisBook = () => {
     sellerID: purchasesellerID.value,
     goodID: purchaseBookID.value
   })
-      .then(function (response) {
-        if (purchasesellerID.value == response.data) {
-          ElMessage({
-            message: '无法购买自己发布的商品',
-            type: 'error',
-            plain: true,
-          })
-        } else {
-          router.replace('/userProfile/MyOrders?personalID=' + response.data)
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    .then(function (response) {
+      if (purchasesellerID.value == response.data) {
+        ElMessage({
+          message: '无法购买自己发布的商品',
+          type: 'error',
+          plain: true,
+        })
+      } else {
+        router.replace('/userProfile/MyOrders?personalID=' + response.data)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
 </script>
 

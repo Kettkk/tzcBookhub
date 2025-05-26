@@ -1,9 +1,7 @@
 package com.tzc.tzcbookhub.mapper;
 
 import com.tzc.tzcbookhub.model.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -28,5 +26,14 @@ public interface UserMapper {
     @Insert("INSERT INTO User (username, user_id, password, email, money, star, avatar, create_time, last_update_time) " +
             "VALUES (#{username}, #{userID}, #{password}, #{email}, #{money}, #{star}, #{avatar}, #{createTime}, #{lastUpdateTime})")
     int insertUser(User user);
+
+    @Update("UPDATE User SET username = #{username} WHERE user_id = #{userID}")
+    void updateUsername(@Param("username") String username, @Param("userID") int userID);
+
+    @Update("UPDATE User SET email = #{email} WHERE user_id = #{userID}")
+    void updateEmail(@Param("email") String email, @Param("userID") int userID);
+
+    @Update("UPDATE User SET avatar = #{avatar} WHERE user_id = #{userID}")
+    void updateAvatar(@Param("avatar") String avatar, @Param("userID") int userID);
 
 }

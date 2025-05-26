@@ -11,7 +11,6 @@
 import contactItem from './contactItem.vue';
 import { ref ,onMounted, defineEmits} from 'vue';
 import axios from "axios";
-import { testURL } from "@/Tools/testTool.js";
 
 let contactList = ref([]);
 let selectedIndex = ref(0);
@@ -19,23 +18,29 @@ let selectedIndex = ref(0);
 const emits = defineEmits(["getContactName"]);
 
 onMounted(() => {
-  axios.post('http://'+testURL+':5062/api/chat/contactListMounted', {
-    "jwtStr": document.cookie.split('=')[1],
-  })
-      .then(function (response) {
-        console.log(response.data);
-        contactList.value = response.data;
-        emits("getContactName", contactList.value[0].name);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+  axios.get('http://localhost:8000/api/chat/getChat', {
+    withCredentials: true
+  }).then(response => {
+    console.log(response.data);
+    contactList.value = response.data;
+
+    
+    if (contactList.value.length > 0) {
+      select(0);
+    }
+  }).catch(error => {
+    console.error(error)
+  });
 });
+
 
 const select = (index) => {
   selectedIndex.value = index;
-  emits("getContactName", contactList.value[index].name);
+  emits("getContactName", contactList.value[index].username);
+  emits("getContactId", contactList.value[index].userID)
 }
+
+
 </script>
 
 <style scoped>

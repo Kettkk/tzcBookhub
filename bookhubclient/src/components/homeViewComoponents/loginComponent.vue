@@ -3,24 +3,6 @@ import { ref } from "vue";
 import axios from "axios";
 import {ElMessage} from "element-plus";
 
-function checkJwt1CookieExists() {
-    const cookies = document.cookie.split('; ');
-    const jwtCookie = cookies.find(cookie => cookie.trim().startsWith('jwt1='));
-    if (jwtCookie) {
-        const value = jwtCookie.split('=')[1];
-        if (value === '')// 确保 cookie 的值不为空
-        {
-            return true;
-        }
-        else
-        {
-            ElMessage.error('无需登录，请先退出登录');
-            return false;
-        }
-    }
-    return true; // 如果 cookie 不存在，则直接返回 false
-}
-
 const dialogVisible = ref(false); // 控制对话框显示的状态
 const loginForm = ref({
     username: '',
@@ -83,7 +65,7 @@ const test = (loginInfo) => {
             // 设置 Cookie
             document.cookie = `jwt1=${jwt}; expires=${new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
 
-            if (res.data === "500") {
+            if (res.data === 500) {
                 ElMessage.error('登录失败，请检查用户名或密码是否正确(╥﹏╥)');
             }
             else {
@@ -91,6 +73,7 @@ const test = (loginInfo) => {
                     message: '登录成功٩(๑^o^๑)۶',
                     type: 'success',
                 })
+                window.location.reload();
             }
         })
         .catch(err => {
@@ -100,7 +83,7 @@ const test = (loginInfo) => {
 </script>
 
 <template>
-    <el-button class="button" color="#e2c8ca" :dark="true" plain link @click="dialogVisible = checkJwt1CookieExists()">
+    <el-button class="button" color="#e2c8ca" :dark="true" plain link @click="dialogVisible = true">
         登录
     </el-button>
 

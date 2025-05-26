@@ -35,7 +35,7 @@
                 <a href="https://yz.chsi.com.cn/">中国研究生招生信息网</a>
             </el-breadcrumb-item>
             <el-breadcrumb-item>
-                <a href="https://www.hdu.edu.cn/main.htm">杭州电子科技大学官网</a>
+                <a href="https://www.tzc.edu.cn/">台州学院官网</a>
             </el-breadcrumb-item>
             <el-breadcrumb-item>
                 友情链接
