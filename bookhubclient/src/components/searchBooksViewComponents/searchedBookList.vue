@@ -8,12 +8,15 @@ const route = useRoute();
 import { useRoute } from 'vue-router';
 const goodsList = ref([])
 const keyWord = ref('') 
-import { testURL } from "@/Tools/testTool";
+
 keyWord.value = route.query.keyword
 
-const url ='http://'+testURL+':5062/api/Search?keyword='+encodeURIComponent(keyWord.value)
 
-axios.post(url)
+axios.post('http://localhost:8000/api/updateGood',null,{
+  params: {
+    keyword: keyWord.value
+  }
+})
   .then(function (response) {
     goodsList.value=response.data
     console.log(response.data);

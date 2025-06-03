@@ -1,124 +1,82 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { testURL } from '@/Tools/testTool';
-import { useRoute } from 'vue-router';
-import axios from "axios";
+import axios from 'axios'
 import { ElMessage } from 'element-plus'
-const route = useRoute();
 
-//#region 显示已购买但未收货的订单信息
+// 订单数据
 const orderData = ref([])
-onMounted(() => {
-    const url = 'http://' + testURL + ':5062/api/OrderManagement/GetAllOrders?personalID=' + route.query.personalID
-    axios.post(url)
-        .then(function (response) {
-            orderData.value = response.data
-            console.log(response.data);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-})
-//#endregion
 
-//#region 点击收货按钮，获取收货的单号
-const acceptOrderID = ref()
+// 获取所有订单
+const getOrderData = () => {
+  axios.get('http://localhost:8000/api/getAllOrders')
+      .then(response => {
+        orderData.value = response.data
+      })
+      .catch(error => {
+        console.error('获取订单数据失败：', error)
+      })
+}
+
+// 点击确认收货按钮，发送状态更新请求
 const confirmAccept = (orderID) => {
-    acceptOrderID.value = orderID
-    dialogRateVisible.value = true
-}
-//#endregion
-
-//#region 实现评分弹窗的功能，确认后提交给卖家的打分
-const dialogRateVisible = ref(false)
-const star = ref(0)
-const cancelRate = () => {
-    star.value = 0
-    dialogRateVisible.value = false
-}
-
-const confirmRate = () => {
-    axios.post('http://' + testURL + ':5062/api/OrderManagement/AcceptAndRate', {
-        orderID: acceptOrderID.value,
-        star: star.value
-    })
-        .then(function (response) {
-            ElMessage({
-                message: '收货成功',
-                type: 'success',
-            })
-
-            console.log(response)
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
-
-    star.value = 0
-    dialogRateVisible.value = false
-    setTimeout(() => {
-      location.reload();
-    }, 1000); 
+  axios.post('http://localhost:8000/api/updateOrderStatus', null, {
+    params: { orderId: orderID }
+  })
+      .then(() => {
+        ElMessage.success('收货成功，订单状态已更新为已完成')
+        getOrderData()
+      })
+      .catch(error => {
+        console.error('收货失败：', error)
+        ElMessage.error('收货失败，请稍后重试')
+      })
 }
 
-//#endregion
-
+onMounted(() => {
+  getOrderData()
+})
 </script>
 
 <template>
-    <el-table :data="orderData" style="width: 100% " max-height="700px">
-        <template #empty>暂无订单数据</template>
-        <el-table-column fixed prop="purchaseTime" label="购买时间" style="width: 12.5%;" />
-        <el-table-column prop="orderID" label="订单号" style="width: 12.5%;" />
-        <el-table-column prop="goodName" label="商品名称" style="width: 12.5%;" />
-        <el-table-column prop="bookImg" label="商品图片" style="width: 12.5%;">
-            <template v-slot="scope">
-                <el-image style="width: 100px; height: 100px" :src="scope.row.bookImg" :fit="fill" />
-            </template>
-        </el-table-column>
-        <el-table-column prop="price" label="商品价格" style="width: 12.5%;" />
-        <el-table-column prop="sellerName" label="卖家名称" style="width: 12.5%;" />
-        <el-table-column fixed="right" style="width: 12.5%;">
-            <template v-slot="scope">
-                <div style="display: flex;justify-content: center;">
-                    <el-button type="primary" @click="confirmAccept(scope.row.orderID)">
-                        确认收货
-                    </el-button>
-                </div>
-            </template>
+  <div class="table-wrapper">
+    <el-table
+        :data="orderData"
+        style="width: 100%; height: 100%"
+        border
+    >
+      <template #empty>暂无订单数据</template>
 
-        </el-table-column>
-    </el-table>
+      <el-table-column prop="orderID" label="订单号" width="100" />
+      <el-table-column prop="sellerID" label="卖家ID" width="100" />
+      <el-table-column prop="consumerID" label="买家ID" width="100" />
+      <el-table-column prop="goodID" label="商品ID" width="100" />
+      <el-table-column prop="orderStatu" label="订单状态" width="120" />
+      <el-table-column prop="createTime" label="创建时间" width="180" />
+      <el-table-column prop="lastUpdateTime" label="最后更新时间" width="180" />
 
-    <!--评分弹窗-->
-    <el-dialog v-model="dialogRateVisible" title="评分" width="300">
-        <div style="display: flex;justify-content: center;">
-            <el-rate v-model="star" allow-half size="large" />
-        </div>
-
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button @click="cancelRate">取消</el-button>
-                <el-button type="primary" @click="confirmRate">
-                    确定
-                </el-button>
-            </div>
+      <!-- 操作列 -->
+      <el-table-column label="操作" width="120" fixed="right">
+        <template #default="scope">
+          <el-button
+              type="primary"
+              size="small"
+              @click="confirmAccept(scope.row.orderID)"
+              :disabled="scope.row.orderStatu !== '未完成'"
+          >
+            确认收货
+          </el-button>
         </template>
-    </el-dialog>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <style scoped>
-.demo-image__error .image-slot {
-    font-size: 30px;
-}
-
-.demo-image__error .image-slot .el-icon {
-    font-size: 30px;
-}
-
-.demo-image__error .el-image {
-    width: 100%;
-    height: 200px;
+.table-wrapper {
+  width: 100%;
+  height: calc(100vh - 120px);
+  overflow: auto;
+  padding: 16px;
+  box-sizing: border-box;
 }
 </style>

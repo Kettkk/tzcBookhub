@@ -69,20 +69,36 @@ const go2otherProfileView = () => {
 }
 
 const purchaseThisBook = () => {
-  const tokenStr = document.cookie.split('=')[1]
-  axios.post('http://localhost:5062/api/Purchase', {
-    tokenStr: tokenStr,
+  const userID = document.cookie.split('=')[1]
+  console.log('userID:', userID, 'purchasesellerID:', purchasesellerID.value, 'purchaseBookID:', purchaseBookID.value)
+  //如果userID = purchasesellerID.value，则提示错误
+  if (userID == purchasesellerID.value) {
+    ElMessage({
+      message: '无法购买自己发布的商品',
+      type: 'error',
+      plain: true,
+    })
+    return;
+  }
+  // 向后端发送购买请求
+  axios.post('http://localhost:8000/api/Purchase', {
+    userId: userID,
     sellerID: purchasesellerID.value,
-    goodID: purchaseBookID.value
+    goodId: purchaseBookID.value
   })
     .then(function (response) {
-      if (purchasesellerID.value == response.data) {
+      if (response.data == "余额不足，无法购买商品") {
         ElMessage({
-          message: '无法购买自己发布的商品',
+          message: '余额不足，无法购买商品',
           type: 'error',
           plain: true,
         })
       } else {
+        ElMessage({
+          message: '购买成功',
+          type: 'success',
+          plain: true,
+        })
         router.replace('/userProfile/MyOrders?personalID=' + response.data)
       }
     })

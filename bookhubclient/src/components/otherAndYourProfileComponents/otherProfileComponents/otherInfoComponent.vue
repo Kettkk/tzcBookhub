@@ -12,12 +12,16 @@ const username = ref('');
 const value = ref();
 const squareUrl = ref('');
 
-const url = 'http://'+testURL+':5062/api/SellerPage/SellerInfo?sellerID=' + userID.value
-axios.post(url)
+
+axios.post('http://localhost:8000/api/userinfo', userID.value, {
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
   .then(function (response) {
-    username.value=response.data.userName
+    username.value=response.data.username
     value.value=response.data.star
-    squareUrl.value=response.data.avatarImg
+    squareUrl.value=response.data.avatar
     console.log(response.data);
   })
   .catch(function (error) {
