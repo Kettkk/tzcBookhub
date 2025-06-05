@@ -36,4 +36,12 @@ public interface UserMapper {
     @Update("UPDATE User SET avatar = #{avatar} WHERE user_id = #{userID}")
     void updateAvatar(@Param("avatar") String avatar, @Param("userID") int userID);
 
+    @Select("SELECT money FROM User WHERE user_id = #{userID}")
+    Double getUserMoney(@Param("userID") int userID);
+
+    @Update("UPDATE User SET money = #{money} WHERE user_id = #{userID}")
+    void updateUserMoney(@Param("money") Double money, @Param("userID") int userID);
+
+
+
 }

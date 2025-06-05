@@ -116,5 +116,10 @@ public class GoodController {
         }
     }
 
+    @PostMapping("updateGood")
+    public List<Good> searchGood(@RequestParam("keyword") String keyword) {
+        return goodMapper.searchByKeyword(keyword);
+    }
+
 
 }

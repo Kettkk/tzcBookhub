@@ -39,5 +39,10 @@ public interface GoodMapper {
     @Select("SELECT id FROM Good ORDER BY id DESC LIMIT 1;")
     int selectFinalId();
 
+    @Select("SELECT good_value FROM Good WHERE good_id = #{goodId}")
+    Double getGoodValue(int goodId);
+
+    @Select("SELECT * FROM Good WHERE good_name LIKE CONCAT('%', #{keyword}, '%')")
+    List<Good> searchByKeyword(String keyword);
 
 }
