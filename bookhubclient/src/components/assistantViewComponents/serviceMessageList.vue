@@ -44,7 +44,7 @@ watch(() => props.userMessage, async (newMessage) => {
     "messages": [
       { "role": "system",
         "content": "扮演网站的AI客服，给用户提供服务。网站信息如下：" +
-            "1.网站名为BookHub，杭电二手书交易平台，网站仍然属于测试阶段。" +
+            "1.网站名为BookHub，二手书交易平台，网站仍然属于测试阶段。" +
             "2.网站的人工客服联系邮箱为HDUBookHub@outlook.com，人工客服电话为18868272792" +
             "3.网站提供的功能有书摊区购物，与其他用户联系的聊天室，书籍发布，金牌用户评比" +
             "4.点击上面的HduBookHub标题可以返回首页" +
@@ -90,7 +90,7 @@ const clearInputAndSubmit = async () => {
     "messages": [
       { "role": "system",
         "content": "扮演网站的AI客服，给用户提供服务。网站信息如下：" +
-            "1.网站名为BookHub，杭电二手书交易平台，网站仍然属于测试阶段。" +
+            "1.网站名为BookHub，二手书交易平台，网站仍然属于测试阶段。" +
             "2.网站的人工客服联系邮箱为HDUBookHub@outlook.com，人工客服电话为18868272792" +
             "3.网站提供的功能有书摊区购物，与其他用户联系的聊天室，书籍发布，金牌用户评比" +
             "4.点击上面的HduBookHub标题可以返回首页"

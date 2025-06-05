@@ -42,7 +42,7 @@ public class UserController {
         return userMapper.selectById(userId);
     }
 
-    @PostMapping("/")
+    @PostMapping("/register")
     public String register(@RequestBody User userFromFront) {
         if (userMapper.findByUsername(userFromFront.getUsername()) != null) {
             return "500"; // 用户名已存在

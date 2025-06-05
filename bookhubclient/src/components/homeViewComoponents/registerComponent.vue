@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import axios from "axios";
 import { ElMessage } from 'element-plus'
-import { testURL } from "@/Tools/testTool";
 const dialogVisible = ref(false); // 控制对话框显示的状态
 const registerVisible = ref(true);
 const registerForm = ref({
