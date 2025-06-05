@@ -1,18 +1,31 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { testURL } from '@/Tools/testTool';
-import { useRoute } from 'vue-router';
 import axios from "axios";
-
-const route = useRoute();
-
 const soldData = ref([])
 
+function formatDate(isoString) {
+    const date = new Date(isoString)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    const seconds = String(date.getSeconds()).padStart(2, '0')
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
 onMounted(() => {
-    const url = 'http://' + testURL + ':5062/api/PersonalBook/GetAllSoldGoods?personalID=' + route.query.personalID
-    axios.post(url)
+    axios.get('http://localhost:8000/api/soldGoods', {
+        withCredentials: true
+    })
         .then(function (response) {
             soldData.value = response.data
+            soldData.value = response.data
+            soldData.value = response.data.map(item => ({
+                ...item,
+                createTime: formatDate(item.createTime),
+                lastUpdateTime: formatDate(item.lastUpdateTime),
+            }))
             console.log(response.data);
         })
         .catch(function (error) {
@@ -24,22 +37,19 @@ onMounted(() => {
 </script>
 
 <template>
-  <el-table :data="soldData" style="width: 100% " max-height="700px">
+    <el-table :data="soldData" style="width: 100% " max-height="700px">
         <template #empty>暂未出售任何商品</template>
-        <el-table-column prop="publishedTime" label="发布时间" style="width: 12.5%;" />
-        <el-table-column prop="acceptTime" label="买家收货时间" style="width: 12.5%;" />
-        <el-table-column prop="orderID" label="订单号" style="width: 12.5%;" />
-        <el-table-column prop="bookName" label="商品名称" style="width: 12.5%;" />
-        <el-table-column prop="bookImg" label="商品图片" style="width: 12.5%;">
+        <el-table-column prop="goodName" label="商品名称" style="width: 12.5%;" />
+        <el-table-column prop="goodName" label="商品简介" style="width: 12.5%;" />
+        <el-table-column prop="goodValue" label="商品价格" style="width: 12.5%;" />
+        <el-table-column prop="createTime" label="商品发布时间" style="width: 12.5%;" />
+        <el-table-column prop="lastUpdateTime" label="买家收货时间" style="width: 12.5%;" />
+        <el-table-column prop="goodImg" label="商品图片" style="width: 12.5%;">
             <template v-slot="scope">
-                <el-image style="width: 100px; height: 100px" :src="scope.row.bookImg" :fit="fill" />
+                <el-image style="width: 100px; height: 100px" :src="scope.row.goodImg" :fit="fill" />
             </template>
         </el-table-column>
-        <el-table-column prop="price" label="商品价格" style="width: 12.5%;" />
-        <el-table-column prop="buyerName" label="买家名称" style="width: 12.5%;" />
     </el-table>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

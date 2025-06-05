@@ -22,9 +22,7 @@ onMounted(() => {
     withCredentials: true
   }).then(response => {
     console.log(response.data);
-    contactList.value = response.data;
-
-    
+    contactList.value = response.data;    
     if (contactList.value.length > 0) {
       select(0);
     }

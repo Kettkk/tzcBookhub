@@ -11,6 +11,17 @@ function getCookie(name) {
 
 const goodsData = ref([])
 
+function formatDate(isoString) {
+  const date = new Date(isoString)
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
 onMounted(() => {
   const userId = getCookie('jwt1')  // 获取 Cookie 中的 jwt1
   if (!userId) {
@@ -21,7 +32,12 @@ onMounted(() => {
   const url = `http://localhost:8000/api/getGoodsBySellerId?sellerId=${userId}`
   axios.get(url)
       .then(response => {
-        goodsData.value = response.data
+        const formattedGoods = response.data.map(good => ({
+          ...good,
+          createTime: formatDate(good.createTime),
+          lastUpdateTime: formatDate(good.lastUpdateTime),
+        }))
+        goodsData.value = formattedGoods
         console.log('获取商品成功:', goodsData.value)
       })
       .catch(error => {
@@ -35,10 +51,9 @@ onMounted(() => {
     <template #empty>您尚未发布任何商品</template>
 
     <el-table-column prop="goodName" label="商品名称" />
-    <el-table-column prop="goodInfo" label="商品信息" />
-    <el-table-column prop="goodValue" label="价格" />
-    <el-table-column prop="createTime" label="创建时间" />
-    <el-table-column prop="lastUpdateTime" label="更新时间" />
+    <el-table-column prop="goodInfo" label="商品简介" />
+    <el-table-column prop="goodValue" label="价格（元）" />
+    <el-table-column prop="createTime" label="发布时间" />
     <el-table-column label="商品图片">
       <template #default="scope">
         <el-image

@@ -4,11 +4,14 @@ import com.tzc.tzcbookhub.mapper.GoodMapper;
 import com.tzc.tzcbookhub.mapper.OrderMapper;
 import com.tzc.tzcbookhub.mapper.UserMapper;
 import com.tzc.tzcbookhub.model.Order;
+import com.tzc.tzcbookhub.model.dto.BoughtSoldGoodResponse;
 import com.tzc.tzcbookhub.model.dto.BuyGoodRequest;
+import com.tzc.tzcbookhub.model.dto.OrderInfoResponse;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.annotation.Resource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -51,6 +54,8 @@ public class OrderController {
         } else {
             userMapper.updateUserMoney(userMoney - goodValue, userId);
             userMapper.updateUserMoney(sellerMoney + goodValue, buyGoodRequest.getSellerID());
+            buyGoodRequest.setCreateTime(LocalDateTime.now());
+            buyGoodRequest.setLastUpdateTime(LocalDateTime.now());
             int result = orderMapper.saveOrder(buyGoodRequest);
             if (result > 0) {
                 return "下单成功";
@@ -60,19 +65,29 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/getAllOrders")
-    public List<Order> getAllOrders() {
-        return orderMapper.selectAllOrders();
+    @GetMapping("/getOrderInfoByConsumerId")
+    public List<OrderInfoResponse> getAllOrders(@CookieValue("jwt1") int consumerId) {
+        return orderMapper.getOrderInfoByConsumerId(consumerId);
     }
 
     @PostMapping("/updateOrderStatus")
-    public void updateOrderStatus(@RequestParam Integer orderId) {
+    public void updateOrderStatus(@RequestParam("orderId") Integer orderId, @RequestParam("star") int star) {
         //检查订单是否存在
         Order order = orderMapper.selectById(orderId);
         if (order == null) {
             throw new RuntimeException("订单不存在");
         }
+        orderMapper.updateSellerStar(orderId, star);
+        orderMapper.updateStatus(orderId, LocalDateTime.now(), "已完成");
+    }
 
-        orderMapper.updateStatus(orderId, "已完成");
+    @GetMapping("/boughtGoods")
+    public List<BoughtSoldGoodResponse> getBoughtGoods(@CookieValue("jwt1") int consumerId) {
+        return orderMapper.selectBoughtGoods(consumerId);
+    }
+
+    @GetMapping("/soldGoods")
+    public List<BoughtSoldGoodResponse> getSoldGood(@CookieValue("jwt1") int sellerId){
+        return orderMapper.selectSoldGoods(sellerId);
     }
 }

@@ -5,19 +5,10 @@
 
         <div id="contact-name">{{ props.item.username }}</div>
 
-
-        <div v-show="isButtonVisible" style="margin-left:auto ;margin-right: 5px;">
-            <el-button type="danger" :icon="CloseBold" circle size='small'  @click="delChat"/>
-        </div>
-        
-
     </div>
 </template>
 
 <script setup>
-import { CloseBold } from '@element-plus/icons-vue'
-import { ref } from 'vue'
-
 
 const props = defineProps({
     item: {
@@ -29,21 +20,6 @@ const props = defineProps({
         required: true
     }
 })
-
-
-const isButtonVisible = ref(false)
-const showButton = () => {
-    isButtonVisible.value = true
-}
-const hideButton = () => {
-    isButtonVisible.value = false
-}
-
-const delChat = () => {
-
-}
-
-
 
 </script>
 

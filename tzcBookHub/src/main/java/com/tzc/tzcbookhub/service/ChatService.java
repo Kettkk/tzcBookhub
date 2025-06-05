@@ -28,4 +28,5 @@ public class ChatService {
     public List<User> getChatListByUserId(int userId) {
         return chatMapper.selectChatByUserId(userId);
     }
+
 }

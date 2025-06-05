@@ -5,13 +5,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class OrderVO {
-    private int orderID;
-    private String sellerName;
-    private String consumerName;
+public class BoughtSoldGoodResponse {
     private String goodName;
-    private String goodImg;
-    private String orderStatu;
+    private String goodInfo;
+    private double goodValue;
     private LocalDateTime createTime;
     private LocalDateTime lastUpdateTime;
+    private String goodImg;
 }

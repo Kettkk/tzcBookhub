@@ -3,6 +3,7 @@ package com.tzc.tzcbookhub.controller;
 import com.tzc.tzcbookhub.model.User;
 import com.tzc.tzcbookhub.model.dto.ChatRequest;
 import com.tzc.tzcbookhub.service.ChatService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +19,14 @@ public class ChatController {
 
     @PostMapping("/save")
     public int saveChat(@CookieValue("jwt1") int userId, @RequestBody ChatRequest chatRequest) {
+        if (userId == chatRequest.getReceiverId()) {
+            return -1;
+        }
         return chatService.saveChat(userId, chatRequest.getReceiverId());
     }
 
     @GetMapping("/getChat")
-    public List<User> getChatListByUserId(@CookieValue("jwt1") int userId){
+    public List<User> getChatListByUserId(@CookieValue("jwt1") int userId) {
         return chatService.getChatListByUserId(userId);
     }
-
 }

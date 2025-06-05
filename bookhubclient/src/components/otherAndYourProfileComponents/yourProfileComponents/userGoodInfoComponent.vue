@@ -7,11 +7,11 @@ const goodsPublishedCount = ref();
 const goodsSoldCount = ref();
 const goodsPurchasedCount = ref();
 const personalID = ref()
-import { testURL } from "@/Tools/testTool";
+
 onMounted(() => {
   const tokenStr = document.cookie.split('=')[1]
 
-  axios.post('http://' + testURL + ':5062/api/PersonalPage', {
+  axios.post('', {
     tokenValue: tokenStr
   })
     .then(function (response) {

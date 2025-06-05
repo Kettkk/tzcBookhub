@@ -48,11 +48,14 @@ const go2ChatView = () => {
   axios.post('http://localhost:8000/api/chat/save', {
     receiverId: purchasesellerID.value
   }, {
-    withCredentials: true 
+    withCredentials: true
   })
     .then(response => {
       console.log(response);
-      router.push('/chatRoom');
+      if (response.data != -1) {
+        router.push('/chatRoom');
+      }
+
     })
     .catch(error => {
       console.error(error);
